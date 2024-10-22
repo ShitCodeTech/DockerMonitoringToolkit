@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Monitor</title>
+</head>
+<body style="background: black;">
+    <h1 style="color: white;">Server Metrics</h1>
+    <pre style="color: white;" id="metrics"></pre>
+
+    <script>
+        let socket = new WebSocket("ws://127.0.0.1:8080/ws");
+
+        socket.onmessage = function(event) {
+            document.getElementById('metrics').innerText = event.data;
+        }; 
+
+        socket.onerror = function(error) {
+            console.log("WebSocket Error: " + error);
+        };
+    </script>
+</body>
+</html>
