@@ -14,7 +14,7 @@ RUN go mod init app && go get -u github.com/gorilla/websocket && go build -o web
 FROM gcc:latest as cppbuilder
 WORKDIR /app
 COPY metrics_collector.cpp .
-RUN g++ -o metrics_collector metrics_collector.cpp
+RUN g++ -o metrics_collector metrics_collector.cpp -lcurl
 
 # Финальный образ
 FROM ubuntu:latest
@@ -24,7 +24,7 @@ COPY --from=builder /app/websocket_server /app/
 COPY --from=cppbuilder /app/metrics_collector /app/
 
 WORKDIR /app
-
+RUN apt update && apt install curl -y
 # Запуск веб-сервера
 CMD ["./websocket_server"]
 

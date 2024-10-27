@@ -5,7 +5,7 @@ cd DockerMonitoringToolkit
 
 docker build -t server_monitor .
 
-docker run --privileged -p 8080:8080
+docker run  --privileged -p 8080:8080 server_monitor
 
 python -m http.server 8000
 
