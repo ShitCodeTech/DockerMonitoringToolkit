@@ -3,22 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server Monitor</title>
+    <title>WebSocket Client</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: black; color:rgba(175, 175, 175, 0.64)}
+        .data { margin-top: 20px; }
+        pre { background: #0a0a0a; padding: 10px; color:white}
+    </style>
 </head>
-<body style="background: black;">
-    <h1 style="color: white;">Server Metrics</h1>
-    <pre style="color: white;" id="metrics"></pre>
+<body>
+    <h1>WebSocket Client</h1>
+    <div class="data">
+        <h2>Received Data:</h2>
+        <pre id="output">No data received yet</pre>
+    </div>
 
     <script>
-        let socket = new WebSocket("ws://127.0.0.1:8080/ws");
+        let socket;
+
+        
+        socket = new WebSocket("ws://localhost:8080/ws");
+
+        socket.onopen = function(event) {
+            console.log("Connected to WebSocket server.");
+        };
 
         socket.onmessage = function(event) {
-            document.getElementById('metrics').innerText = event.data;
-        }; 
+            console.log("Data received:", event.data);
+            const data = JSON.parse(event.data);
+
+            document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+        };
 
         socket.onerror = function(error) {
-            console.log("WebSocket Error: " + error);
+            console.log("WebSocket error:", error);
         };
+
+        socket.onclose = function(event) {
+            console.log("WebSocket connection closed.");
+        };
+    
     </script>
 </body>
 </html>

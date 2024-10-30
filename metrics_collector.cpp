@@ -10,6 +10,7 @@
 #include <cmath>
 #include <curl/curl.h> 
 #include <sys/sysinfo.h>
+#include <typeinfo>
 
 class CPUUsage {
 public:
@@ -85,7 +86,7 @@ void getCpuUsage() {
     std::vector<long> currentStats = CPUUsage::getCpuStats();
 
     double cpuLoad = CPUUsage::calculateCpuLoad(previousStats, currentStats);
-    std::cout << "CPU Load: " << std::round(cpuLoad) << "%" << std::endl;
+    std::cout << std::round(cpuLoad) << "%" << std::endl;
 }
 
 void getOtherShit() {
@@ -94,14 +95,44 @@ void getOtherShit() {
         std::cerr << "Error collecting system info" << std::endl;
         return;
     }
-    double ramUsage = (info.freeram / 1024 / 1024.0) / (info.totalram / 1024 / 1024.0) * 100
-    std::cout << "RAM: " << std::round(ramUsage) << "%" << std::endl;
-    std::cout << "Uptime: " << info.uptime / 60 << " minutes" << std::endl;
+    std::cout << info.uptime / 60 << " minutes" << std::endl;
+}
+
+void getMemLoad() {
+    std::ifstream meminfo("/proc/meminfo");
+    if (!meminfo.is_open()) {
+        std::cerr << "Unable to open /proc/meminfo" << std::endl;
+        return;
+    }
+
+    std::string line;
+    long totalMemory = 0;
+    long freeMemory = 0;
+
+    while (std::getline(meminfo, line)) {
+        if (line.find("MemTotal:") == 0) {
+            totalMemory = std::stol(line.substr(line.find_first_of("0123456789")));
+        } else if (line.find("MemAvailable:") == 0) {
+            freeMemory = std::stol(line.substr(line.find_first_of("0123456789")));
+            break;
+        }
+    }
+
+    meminfo.close();
+
+    if (totalMemory == 0) {
+        std::cerr << "Could not read total memory from /proc/meminfo" << std::endl;
+        return;
+    }
+
+    float usedMemory = totalMemory - freeMemory;
+    float memLoad = (usedMemory / totalMemory) * 100;
+    std::cout << std::round(memLoad) << "%" << std::endl;
 }
 
 void getExternalIP() {
     std::string ip = SystemInfo::getExternalIP();
-    std::cout << "External IP: " << ip << std::endl;
+    std::cout << ip << std::endl;
 }
 
 void getOsInfo() {                              //need to rewrite cause cant get NODE data
@@ -125,13 +156,13 @@ void getOsInfo() {                              //need to rewrite cause cant get
     file.close();
 
     if (!pretty_name.empty()) {
-        std::cout << "PRETTY_NAME: " << pretty_name << "\n";
+        std::cout << pretty_name << "\n";
     } else {
         std::cerr << "PRETTY_NAME not found.\n";
     }
 
     if (!id.empty()) {
-        std::cout << "ID: " << id << "\n";
+        std::cout << id << "\n";
     } else {
         std::cerr << "ID not found.\n";
     }
@@ -142,6 +173,7 @@ void getOsInfo() {                              //need to rewrite cause cant get
 
 int main() {
     getCpuUsage();
+    getMemLoad();
     getOtherShit();
     getExternalIP(); 
     getOsInfo();
