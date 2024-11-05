@@ -86,7 +86,7 @@ void getCpuUsage() {
     std::vector<long> currentStats = CPUUsage::getCpuStats();
 
     double cpuLoad = CPUUsage::calculateCpuLoad(previousStats, currentStats);
-    std::cout << std::round(cpuLoad) << "%" << std::endl;
+    std::cout << std::round(cpuLoad) << std::endl;
 }
 
 void getOtherShit() {
@@ -127,7 +127,7 @@ void getMemLoad() {
 
     float usedMemory = totalMemory - freeMemory;
     float memLoad = (usedMemory / totalMemory) * 100;
-    std::cout << std::round(memLoad) << "%" << std::endl;
+    std::cout << std::round(memLoad) << std::endl;
 }
 
 void getExternalIP() {
