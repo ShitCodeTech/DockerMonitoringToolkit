@@ -14,6 +14,8 @@ import (
 
 type User struct {
 	CPU    string `json:"cpu"`
+	AllMem string `json:"allmem"`
+	UseMem string `json:"usedmem"`
 	Mem    string `json:"mem"`
 	Uptime string `json:"uptime"`
 	IP     string `json:"ip"`
@@ -83,24 +85,31 @@ func collectMetrics() (User, error) {
 
 func parseLines(lines []string) User {
 	user := User{}
-
 	if len(lines) > 0 {
+		// err, dsfkljds := strconv.Atoi(lines[0])
 		user.CPU = lines[0]
+		// log.Println(err, dsfkljds)
 	}
-	if len(lines) > 1 {
-		user.Mem = lines[1]
+	if len(lines) > 1 { 		
+		user.AllMem = lines[1]
 	}
 	if len(lines) > 2 {
-		user.Uptime = lines[2]
+		user.UseMem = lines[2]
 	}
 	if len(lines) > 3 {
-		user.IP = lines[3]
+		user.Mem = lines[3]
 	}
 	if len(lines) > 4 {
-		user.Name = trimQuotes(lines[4])
+		user.Uptime = lines[4]
 	}
 	if len(lines) > 5 {
-		user.ID = lines[5]
+		user.IP = lines[5]
+	}
+	if len(lines) > 6 {
+		user.Name = trimQuotes(lines[6])
+	}
+	if len(lines) > 7 {
+		user.ID = lines[7]
 	}
 
 	return user

@@ -95,7 +95,7 @@ void getOtherShit() {
         std::cerr << "Error collecting system info" << std::endl;
         return;
     }
-    std::cout << info.uptime / 60 << " minutes" << std::endl;
+    std::cout << info.uptime / 60 << std::endl;
 }
 
 void getMemLoad() {
@@ -124,8 +124,9 @@ void getMemLoad() {
         std::cerr << "Could not read total memory from /proc/meminfo" << std::endl;
         return;
     }
-
+    std::cout << totalMemory << std::endl;
     float usedMemory = totalMemory - freeMemory;
+    std::cout << totalMemory - freeMemory << std::endl;
     float memLoad = (usedMemory / totalMemory) * 100;
     std::cout << std::round(memLoad) << std::endl;
 }
