@@ -2,7 +2,6 @@
 
 clone_comand="git clone -b serverside https://github.com/ShitCodeTech/DockerMonitoringToolkit.git"
 repo_dir="DockerMonitoringToolkit"
-build_command="`docker build --build-arg ID="$ID" --build-arg PRETTY_NAME="$PRETTY_NAME" -t server_monitor .`"
 start_command="docker run -p 8080:8080 -d server_monitor"
 
 banner=$(cat << 'EOF'
@@ -62,8 +61,8 @@ else
     PRETTY_NAME=''
 fi
 
-echo "Building container..."
-$build_command
+echo "Building container... It may take a time. Just wait"
+docker build --build-arg ID="$ID" --build-arg PRETTY_NAME="$PRETTY_NAME" -t server_monitor .
 
 echo "Starting container..."
 $start_command
@@ -74,3 +73,4 @@ rm -rf $repo_dir
 docker ps
 
 echo "Installation completed successfully!"
+
