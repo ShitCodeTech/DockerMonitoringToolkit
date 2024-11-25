@@ -5,7 +5,7 @@ repo_dir="DockerMonitoringToolkit"
 build_command="`docker build --build-arg ID="$ID" --build-arg PRETTY_NAME="$PRETTY_NAME" -t server_monitor .`"
 start_command="docker run -p 8080:8080 -d server_monitor"
 
-banner=$tput setaf 3;(cat << 'EOF'
+banner=$(cat << 'EOF'
   █████████ █████     ███ █████     █████████             █████       ███████████           █████     
  ███░░░░░██░░███     ░░░ ░░███     ███░░░░░███           ░░███       ░█░░░███░░░█          ░░███      
 ░███    ░░░ ░███████ ███████████  ███     ░░░  ██████  ███████  █████░   ░███  ██████ ██████░███████  
@@ -15,7 +15,7 @@ banner=$tput setaf 3;(cat << 'EOF'
 ░░█████████ ████ █████████░░█████ ░░█████████░░██████░░███████░░██████   ████░░█████░░██████████ █████
  ░░░░░░░░░ ░░░░ ░░░░░░░░░  ░░░░░   ░░░░░░░░░  ░░░░░░  ░░░░░░░░ ░░░░░░   ░░░░░ ░░░░░░ ░░░░░░░░░░ ░░░░░ 
 EOF
-);tput setaf default
+)
 
 cols=$(tput cols)
 while IFS= read -r line; do
@@ -25,9 +25,7 @@ while IFS= read -r line; do
         padding=$(( (cols - ${#line}) / 2 ))
         printf "%${padding}s%s\n" "" "$line"
     fi
-tput setaf $1
 done <<< "$banner"
-tput setaf default
 
 echo "Starting the installation process..."
 
