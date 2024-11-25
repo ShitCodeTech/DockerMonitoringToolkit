@@ -125,9 +125,9 @@ void getMemLoad() {
         std::cerr << "Could not read total memory from /proc/meminfo" << std::endl;
         return;
     }
-    std::cout << std::setprecision(3) << totalMemory/1000000.0  << std::endl;
+    std::cout << std::trunc(totalMemory/1000000.0)   << std::endl;
     float usedMemory = totalMemory - freeMemory;
-    std::cout << std::setprecision(3) << usedMemory/1000000.0 << std::endl;
+    std::cout << round((usedMemory/1000000.0)*10)/10 << std::endl;
     float memLoad = (usedMemory / totalMemory) * 100;
     std::cout << std::round(memLoad) << std::endl;
 }
