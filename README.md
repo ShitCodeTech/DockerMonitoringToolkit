@@ -1,6 +1,7 @@
 # BUILD
 
 git clone https://github.com/ShitCodeTech/DockerMonitoringToolkit
+
 cd DockerMonitoringToolkit
 
 docker build -t server_monitor .

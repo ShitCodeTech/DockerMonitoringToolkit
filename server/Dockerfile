@@ -19,6 +19,15 @@ RUN g++ -o metrics_collector metrics_collector.cpp -lcurl
 # Финальный образ
 FROM ubuntu:latest
 
+# Так надо для 
+ARG ID
+ARG PRETTY_NAME
+ENV ID="${ID}"
+ENV PRETTY_NAME="${PRETTY_NAME}"
+
+ARG APP_ENV=production
+ENV APP_ENV="${APP_ENV}"
+
 # Копируем файлы из предыдущих стадий
 COPY --from=builder /app/websocket_server /app/
 COPY --from=cppbuilder /app/metrics_collector /app/

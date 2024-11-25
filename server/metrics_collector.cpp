@@ -11,6 +11,7 @@
 #include <curl/curl.h> 
 #include <sys/sysinfo.h>
 #include <typeinfo>
+#include <iomanip>
 
 class CPUUsage {
 public:
@@ -124,9 +125,9 @@ void getMemLoad() {
         std::cerr << "Could not read total memory from /proc/meminfo" << std::endl;
         return;
     }
-    std::cout << totalMemory << std::endl;
+    std::cout << std::setprecision(3) << totalMemory/1000000.0  << std::endl;
     float usedMemory = totalMemory - freeMemory;
-    std::cout << totalMemory - freeMemory << std::endl;
+    std::cout << std::setprecision(3) << usedMemory/1000000.0 << std::endl;
     float memLoad = (usedMemory / totalMemory) * 100;
     std::cout << std::round(memLoad) << std::endl;
 }
@@ -137,35 +138,17 @@ void getExternalIP() {
 }
 
 void getOsInfo() {                              //need to rewrite cause cant get NODE data
-    std::ifstream file("/etc/os-release");      //can be maked in install script btw
-    if (!file.is_open()) {
-        std::cerr << "Unable to open /etc/os-release file.\n";
-        return;
-    }
-
-    std::string line;
-    std::string id, pretty_name;
-
-    while (std::getline(file, line)) {
-        if (line.rfind("ID=", 0) == 0) {
-            id = line.substr(3); // Remove "ID=" prefix
-        } else if (line.rfind("PRETTY_NAME=", 0) == 0) {
-            pretty_name = line.substr(12); // Remove "PRETTY_NAME=" prefix
-        }
-    }
-
-    file.close();
-
-    if (!pretty_name.empty()) {
+    
+    if (const char* pretty_name = std::getenv("PRETTY_NAME")) {
         std::cout << pretty_name << "\n";
     } else {
-        std::cerr << "PRETTY_NAME not found.\n";
+        std::cerr << "NAMEfucked\n";
     }
 
-    if (!id.empty()) {
+    if (const char* id = std::getenv("ID")) {
         std::cout << id << "\n";
     } else {
-        std::cerr << "ID not found.\n";
+        std::cerr << "IDfucked\n";
     }
 }
 
